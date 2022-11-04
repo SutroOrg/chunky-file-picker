@@ -1,4 +1,6 @@
+@sutro/chunky-file-picker / [Exports](modules.md)
+
 # chunky-file-picker
 An improved Image/Video File Picker experience for Expo users
 
-[API docs](docs/README.md)
+[API docs](docs/index.html)
