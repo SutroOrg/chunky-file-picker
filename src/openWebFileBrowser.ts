@@ -8,9 +8,15 @@ type Cancellation = ImagePicker.ImagePickerCancelledResult;
 type WebFileSelection = { cancelled: false; files: File[] };
 type WebDialogOutcome = Cancellation | WebFileSelection;
 
-type FileSelection = { cancelled: false; files: ChunkyFile[] };
+/**
+ * If the user selects a file (or multiple files), this is what is returned
+ */
+export type FileSelection = { cancelled: false; files: ChunkyFile[] };
 
-type ChunkyImagePickerOptions = Pick<
+/**
+ * This is a subset of the options passable to `ImagePicker.launchImageLibraryAsync`
+ */
+export type ChunkyImagePickerOptions = Pick<
   Exclude<Parameters<typeof ImagePicker.launchImageLibraryAsync>[0], undefined>,
   "mediaTypes" | "allowsMultipleSelection"
 >;
@@ -69,10 +75,21 @@ const openWebFileBrowser = ({
   });
 };
 
-export const pickFile = async ({
-  mediaTypes = ImagePicker.MediaTypeOptions.All,
-  allowsMultipleSelection = false,
-}: ChunkyImagePickerOptions): Promise<Cancellation | FileSelection> => {
+/**
+ * Select one or more files and get a list of ChunkyFiles in response
+ *
+ * @param options
+ * @param options.mediaTypes [ImagePicker.MediaTypeOptions.All] - the media types supported in the picker
+ * @param options.allowsMultipleSelection [false] - if `true`, the user can select multiple files from the picker
+ * @returns
+ */
+export const pickFile = async (
+  options: ChunkyImagePickerOptions
+): Promise<Cancellation | FileSelection> => {
+  const {
+    mediaTypes = ImagePicker.MediaTypeOptions.All,
+    allowsMultipleSelection = false,
+  } = options;
   if (Platform.OS !== "web") {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
